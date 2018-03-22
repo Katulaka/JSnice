@@ -18,7 +18,6 @@ def flatten(l):
 
 class MLPLDataset(Dataset):
     def __init__(self, fname):
-        import ipdb; ipdb.set_trace()
         with open(fname) as json_file:
             data = json.load(json_file)
             inp, out = zip(*data)
