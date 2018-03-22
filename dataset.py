@@ -25,15 +25,17 @@ class MLPLDataset(Dataset):
             inp, out = zip(*data)
             print('[MLPLDataset.init] split data to input/output')
             self.inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
+            self.inp_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
             print('[MLPLDataset.init] End create input vocab')
             self.out_vocab = sorted(list(set(out)))
+            self.out_vocab = dict(map(reversed, enumerate(self.out_vocab)))
             print('[MLPLDataset.init] End create output vocab')
-            in_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
             import ipdb; ipdb.set_trace()
-            self.input_data = [[[in_vocab[tok] for tok in seq] for seq in x] for x in inp]
-            self.input_data = [[[self.inp_vocab.index(tok) for tok in seq] for seq in x] for x in inp]
+            self.input_data = [[[self.inp_vocab[tok] for tok in seq] for seq in x] for x in inp]
+            # self.input_data = [[[self.inp_vocab.index(tok) for tok in seq] for seq in x] for x in inp]
             print('[MLPLDataset.init] End tokenize input data')
-            self.output_data = [self.out_vocab.index(tok) for tok in out]
+            self.output_data = [self.out_vocab[tok] for tok in out]
+            # self.output_data = [self.out_vocab.index(tok) for tok in out]
             print('[MLPLDataset.init] End tokenize output data')
 
 
