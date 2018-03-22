@@ -19,14 +19,19 @@ def flatten(l):
 class MLPLDataset(Dataset):
     def __init__(self, fname):
         with open(fname) as json_file:
-            print('[MLPLDataset.init] start data load')
+            print('[MLPLDataset.init] Start data load')
             data = json.load(json_file)
-            print('[MLPLDataset.init] finished data load')
+            print('[MLPLDataset.init] End data load')
             inp, out = zip(*data)
+            print('[MLPLDataset.init] split data to input/output')
             self.inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
+            print('[MLPLDataset.init] End create input vocab')
             self.out_vocab = sorted(list(set(out)))
+            print('[MLPLDataset.init] End create output vocab')
             self.input_data = [[[self.inp_vocab.index(tok) for tok in seq] for seq in x] for x in inp]
+            print('[MLPLDataset.init] End tokenize input data')
             self.output_data = [self.out_vocab.index(tok) for tok in out]
+            print('[MLPLDataset.init] End tokenize output data')
 
 
     def __len__(self):
