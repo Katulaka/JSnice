@@ -28,8 +28,9 @@ class MLPLDataset(Dataset):
             print('[MLPLDataset.init] End create input vocab')
             self.out_vocab = sorted(list(set(out)))
             print('[MLPLDataset.init] End create output vocab')
-            in_vocab = dict((map(reversed, enumerate(self.inp_vocab)))
+            in_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
             import ipdb; ipdb.set_trace()
+            self.input_data = [[[in_vocab[tok] for tok in seq] for seq in x] for x in inp]
             self.input_data = [[[self.inp_vocab.index(tok) for tok in seq] for seq in x] for x in inp]
             print('[MLPLDataset.init] End tokenize input data')
             self.output_data = [self.out_vocab.index(tok) for tok in out]
