@@ -18,14 +18,15 @@ def flatten(l):
 
 class MLPLDataset(Dataset):
     def __init__(self, fname):
-        with open(fname) as json_file:    
+        import ipdb; ipdb.set_trace()
+        with open(fname) as json_file:
             data = json.load(json_file)
             inp, out = zip(*data)
             self.inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
             self.out_vocab = sorted(list(set(out)))
             self.input_data = [[[self.inp_vocab.index(tok) for tok in seq] for seq in x] for x in inp]
             self.output_data = [self.out_vocab.index(tok) for tok in out]
-            
+
 
     def __len__(self):
         return len(self.output_data)

@@ -39,6 +39,7 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
   current_time = time.time()
 
   for epoch in range(start_epoch,NUM_EPOCHS):
+    import ipdb; ipdb.set_trace()
     running_loss = 0.
     total_correct = 0.
     # utils.exp_lr_scheduler(optimizer, epoch, init_lr=settings['init_lr'], lr_decay_epoch=settings['decay_num_epochs'],decay_rate=settings['decay_lr'])
@@ -80,7 +81,7 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
 
 def main():
     fname = 'train_data_100.json'
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     ds = MLPLDataset(fname)
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     if settings['cuda']:
