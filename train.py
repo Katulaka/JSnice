@@ -80,6 +80,7 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
 
 def main():
     fname = 'train_data_100.json'
+    import ipdb; ipdb.set_trace()
     ds = MLPLDataset(fname)
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     if settings['cuda']:
