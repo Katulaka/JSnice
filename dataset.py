@@ -19,7 +19,9 @@ def flatten(l):
 class MLPLDataset(Dataset):
     def __init__(self, fname):
         with open(fname) as json_file:
+            print('[MLPLDataset.init] start data load')
             data = json.load(json_file)
+            print('[MLPLDataset.init] finished data load')
             inp, out = zip(*data)
             self.inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
             self.out_vocab = sorted(list(set(out)))
