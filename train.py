@@ -25,7 +25,7 @@ criterion = nn.CrossEntropyLoss()
 settings = MLPLSettings({'cuda': True})
 
 def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
-
+  print('Start training')
   if optimizer is None:
     optimizer = optim.SGD(model.parameters(), lr=INIT_LR, momentum=0.9)
 
@@ -39,7 +39,6 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
   current_time = time.time()
 
   for epoch in range(start_epoch,NUM_EPOCHS):
-    import ipdb; ipdb.set_trace()
     running_loss = 0.
     total_correct = 0.
     # utils.exp_lr_scheduler(optimizer, epoch, init_lr=settings['init_lr'], lr_decay_epoch=settings['decay_num_epochs'],decay_rate=settings['decay_lr'])
@@ -83,7 +82,9 @@ def main():
     fname = 'train_data_100.json'
     # import ipdb; ipdb.set_trace()
     ds = MLPLDataset(fname)
+    print ('[MLPLDataset:] finish init')
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
+    print ('[MLPLDataset:] Load model')
     if settings['cuda']:
         model = model.cuda()
     train(ds,model)
