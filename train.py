@@ -35,7 +35,7 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
   if do_log:
     configure("runs/mlpl_run_%s" % str(time.time())[-4:], flush_secs=5)
   get_step = lambda x,y: x*len(trainloader)+y
-  start_epoch=0  
+  start_epoch=0
   current_time = time.time()
 
   for epoch in range(start_epoch,NUM_EPOCHS):
@@ -57,11 +57,11 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
         print('Woah, something is going on')
         print(e)
       optimizer.step()
-      running_loss += loss.data[0]      
+      running_loss += loss.data[0]
       if get_step(epoch,i) % LOG_EVERY == 0:
         log_value('loss',loss.data[0],get_step(epoch,i))
-      if i % PRINT_LOSS_EVERY == PRINT_LOSS_EVERY-1:        
-        new_time = time.time()                
+      if i % PRINT_LOSS_EVERY == PRINT_LOSS_EVERY-1:
+        new_time = time.time()
         print('Average time per mini-batch, %f' % ((new_time-current_time) / PRINT_LOSS_EVERY))
         current_time = new_time
         # ipdb.set_trace()
@@ -73,17 +73,18 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
       if iters is not None and get_step(epoch,i) > iters:
         return
 
-    if epoch % SAVE_EVERY == 0:            
+    if epoch % SAVE_EVERY == 0:
       torch.save(model.state_dict(),'model_epoch_%d.model' % epoch)
 
 
 
 def main():
-  ds = MLPLDataset('train_data.json')
-  model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
-  if settings['cuda']:
-    model = model.cuda()
-  train(ds,model)
+    fname = 'train_data_100.json'
+    ds = MLPLDataset(fname)
+    model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
+    if settings['cuda']:
+        model = model.cuda()
+    train(ds,model)
 
 
 if __name__=='__main__':
