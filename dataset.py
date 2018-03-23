@@ -10,12 +10,12 @@ import json
 LongTensor = torch.cuda.LongTensor if torch.cuda.device_count() and False else torch.LongTensor
 
 class MLPLDataset(Dataset):
-    def __init__(self, fname, fvocab='vocab'):
+    def __init__(self, fname, inp_vocab, out_vocab):
         print('[MLPLDataset.init] Start init')
 
-        with open(fvocab) as vocab_file:
-            vocab = json.load(vocab_file)
-        self.inp_vocab, self.out_vocab = zip(*vocab)
+
+        self.inp_vocab = inp_vocab
+        self.out_vocab = out_vocab
 
         with open(fname) as json_file:
 
@@ -24,13 +24,9 @@ class MLPLDataset(Dataset):
             inp, out = zip(*data)
             print('[MLPLDataset.init] split data to input/output')
 
-        self.input_data =  [[[self.inp_vocab[tok] for tok in seq
-                                if tok in self.inp_vocab
-                                else self.inp_vocab['<unk>']]]
+        self.input_data =  [[[self.inp_vocab.vtoi(tok) for tok in seq]
                                 for seq in x] for x in inp]
-        self.output_data = [self.out_vocab[tok] for tok in out
-                            if tok in self.inp_vocab
-                                else self.inp_vocab['<unk>']]
+        self.output_data = [self.out_vocab.vtoi(tok) for tok in out]
 
     def __len__(self):
         return len(self.output_data)

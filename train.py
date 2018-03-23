@@ -12,6 +12,7 @@ import ipdb
 from model import *
 from dataset import *
 from settings import *
+from MLPLVocab import *
 
 INIT_LR = 0.01
 BATCH_SIZE = 128
@@ -105,19 +106,22 @@ def eval_(ds, model):
 
 
 def main():
+    with open(f_freq) as freq_file:
+        freqs = json.load(freq_file)
+
+    v_in = MLPLVocab(freqs[0], max_size=max_size, min_freq=min_freq, specials=['<pad>', '<unk>'])
+    v_out = MLPLVocab(freqs[1], max_size=max_size, min_freq=min_freq)
+
     ftrain = 'train_data.json'
     feval = 'eval_data.json'
 
     if TRAIN:
-        ds  = MLPLDataset(ftrain)
+        ds  = MLPLDataset(ftrain, v_in, v_out)
+        model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     else:
-        ds  = MLPLDataset(feval)
-    print ('[MLPLDataset:] finish init')
+        ds  = MLPLDataset(feval, v_in, v_out)
+        model.load_state_dict(torch.load('{}'.format(settings['base_model'])))
 
-    model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
-    print ('[MLPLDataset:] Load model')
-    if not TRAIN:
-      model.load_state_dict(torch.load('{}'.format(settings['base_model'])))
     if settings['cuda']:
         model = model.cuda()
 
