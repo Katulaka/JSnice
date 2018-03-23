@@ -1,0 +1,4 @@
+mljs*
+*.json
+pytorch-seq2seq
+__pycache__
