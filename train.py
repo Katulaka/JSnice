@@ -104,18 +104,26 @@ def eval(ds, model):
 
 
 def main():
+    ftrain = 'train_data.json'
+    ftest = 'test_data.json'
+    if not if 'vocab'.is_file():
+        gen_vocab(ftrain)
+
     if TRAIN:
-        fname = 'train_data.json'
-        ds  = MLPLDataset(fname)
+        ds  = MLPLDataset(ftrain)
     else:
-        fname = 'test_data.json'
-        ds  = MLPLDataset(fname)
+        ds  = MLPLDataset(ftest)
     print ('[MLPLDataset:] finish init')
+
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     print ('[MLPLDataset:] Load model')
     if settings['cuda']:
         model = model.cuda()
-    train(ds,model)
+
+    if TRAIN:
+        train(ds,model)
+    else:
+        eval(ds, model)
 
 
 if __name__=='__main__':
