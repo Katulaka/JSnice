@@ -53,26 +53,6 @@ class MLPLDataset(Dataset):
         return rc, np.asarray(lengths), self.output_data[idx]
         return rc
 
-def gen_vocab(fname):
-
-    with open(fname) as json_file:
-        print('[Mgen_vocab] Start data load')
-        data = json.load(json_file)
-        print('[gen_vocab] End data load')
-        inp, out = zip(*data)
-        print('[gen_vocab] split data to input/output')
-    inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
-    inp_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
-    inp_vocab.update({'<unk>':-1})
-    print('[gen_vocab] End create input vocab')
-    out_vocab = sorted(list(set(out)))
-    out_vocab = dict(map(reversed, enumerate(self.out_vocab)))
-    out_vocab.update({'<unk>':-1})
-    print('[gen_vocab] End create output vocab')
-    with open('vocab', 'w') as outfile:
-        json.dump([inp_vocab, out_vocab], outfile)
-
-
 def mlpl_collate(batch):
     inp, lengths, out = zip(*batch)
     x, y = zip(*[x.shape for x in inp])

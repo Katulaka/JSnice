@@ -105,14 +105,12 @@ def eval(ds, model):
 
 def main():
     ftrain = 'train_data.json'
-    ftest = 'test_data.json'
-    if not if 'vocab'.is_file():
-        gen_vocab(ftrain)
+    feval = 'eval_data.json'
 
     if TRAIN:
         ds  = MLPLDataset(ftrain)
     else:
-        ds  = MLPLDataset(ftest)
+        ds  = MLPLDataset(feval)
     print ('[MLPLDataset:] finish init')
 
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
