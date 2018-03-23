@@ -8,6 +8,7 @@ import torch.utils.data
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboard_logger import configure, log_value
 
+import ipdb
 from model import *
 from dataset import *
 from settings import *
@@ -25,7 +26,7 @@ SAVE_EVERY = 5
 
 criterion = nn.CrossEntropyLoss()
 
-settings = MLPLSettings({'cuda': True})
+settings = MLPLSettings({'cuda': False, 'base_model': ''})
 
 def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
   print('Start training')
@@ -93,7 +94,7 @@ def eval_(ds, model):
         if settings['cuda']:
             seq, seq_len, labels = seq.cuda(), seq_len.cuda(), labels.cuda()
         outputs = model(seq,seq_len)
-        import ipdb; ipdb.set_trace()
+        ipdb.set_trace()
         # running_accuracy +=
         # if i % PRINT_ACC_EVERY == PRINT_ACC_EVERY-1:
         #     new_time = time.time()
@@ -115,6 +116,8 @@ def main():
 
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     print ('[MLPLDataset:] Load model')
+    if not TRAIN:
+      model.load_state_dict(torch.load('{}'.format(settings['base_model'])))
     if settings['cuda']:
         model = model.cuda()
 
