@@ -1,7 +1,7 @@
 import json
 
 f_train = 'mljs/jsnice_data/training_processed.txt'
-f_test =  'mljs/jsnice_data/eval_processed.txt'
+f_test =  'mljs/jsnice_data/eval_processsed.txt'
 f_in = [f_train, f_test]
 
 max_context = 100
