@@ -18,36 +18,27 @@ def flatten(l):
     return list(itertools.chain.from_iterable(l))
 
 class MLPLDataset(Dataset):
-    def __init__(self, fname):
+    def __init__(self, fname, fvocab='vocab'):
+        print('[MLPLDataset.init] Start init')
+
+        with open(fvocab) as vocab_file:
+            vocab = json.load(vocab_file)
+        self.inp_vocab, self.out_vocab = zip(*vocab)
 
         with open(fname) as json_file:
-            print('[MLPLDataset.init] Start data load')
+
             data = json.load(json_file)
             print('[MLPLDataset.init] End data load')
             inp, out = zip(*data)
             print('[MLPLDataset.init] split data to input/output')
-            self.inp_vocab = ['<pad>','<unk>'] + sorted(list(set(flatten(flatten(inp)))))
-            self.inp_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
-            print('[MLPLDataset.init] End create input vocab')
-            self.input_data = [[[self.inp_vocab[tok] for tok in seq] for seq in x] for x in inp]
-            print('[MLPLDataset.init] End tokenize input data')
-            self.out_vocab = sorted(list(set(out)))
-            self.out_vocab = dict(map(reversed, enumerate(self.out_vocab)))
-            print('[MLPLDataset.init] End create output vocab')
-            self.output_data = [self.out_vocab[tok] for tok in out]
-            print('[MLPLDataset.init] End tokenize output data')
 
-
-    def get_tok_value(self, tok, vocab):
-        try:
-            return vocab[tok]
-        except:
-            return vocab['<unk>']
-
-    def create_vocab(self, vocab, data, vocab_sz=-1):
-        cnt = Counter(data).most_common()
-        vocab += list(np.array(cnt[:vocab_sz])[:,0])
-        return dict(map(reversed, enumerate(vocab)))
+        self.input_data =  [[[self.inp_vocab[tok] for tok in seq
+                                if tok in self.inp_vocab
+                                else self.inp_vocab['<unk>']]]
+                                for seq in x] for x in inp]
+        self.output_data = [self.out_vocab[tok] for tok in out
+                            if tok in self.inp_vocab
+                                else self.inp_vocab['<unk>']]
 
     def __len__(self):
         return len(self.output_data)
@@ -61,6 +52,26 @@ class MLPLDataset(Dataset):
             rc[i][:len(it)] = np.asarray(it)
         return rc, np.asarray(lengths), self.output_data[idx]
         return rc
+
+def gen_vocab(fname):
+
+    with open(fname) as json_file:
+        print('[Mgen_vocab] Start data load')
+        data = json.load(json_file)
+        print('[gen_vocab] End data load')
+        inp, out = zip(*data)
+        print('[gen_vocab] split data to input/output')
+    inp_vocab = ['<pad>'] + sorted(list(set(flatten(flatten(inp)))))
+    inp_vocab = dict(map(reversed, enumerate(self.inp_vocab)))
+    inp_vocab.update({'<unk>':-1})
+    print('[gen_vocab] End create input vocab')
+    out_vocab = sorted(list(set(out)))
+    out_vocab = dict(map(reversed, enumerate(self.out_vocab)))
+    out_vocab.update({'<unk>':-1})
+    print('[gen_vocab] End create output vocab')
+    with open('vocab', 'w') as outfile:
+        json.dump([inp_vocab, out_vocab], outfile)
+
 
 def mlpl_collate(batch):
     inp, lengths, out = zip(*batch)
