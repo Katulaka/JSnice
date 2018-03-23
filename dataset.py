@@ -1,21 +1,13 @@
 import numpy as np
-from functools import partial
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import torch.nn.functional as F
 from torch.utils.data import Dataset
-import itertools
 import json
-import ipdb
-from collections import Counter
 
 LongTensor = torch.cuda.LongTensor if torch.cuda.device_count() and False else torch.LongTensor
-
-
-def flatten(l):
-    return list(itertools.chain.from_iterable(l))
 
 class MLPLDataset(Dataset):
     def __init__(self, fname, fvocab='vocab'):

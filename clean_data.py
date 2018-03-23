@@ -1,4 +1,8 @@
 import json
+import itertools
+
+def flatten(l):
+    return list(itertools.chain.from_iterable(l))
 
 MAX_CONTEXT = 100
 # for path_r, path_w in zip(f_in, f_out):
