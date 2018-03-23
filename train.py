@@ -79,7 +79,7 @@ def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
     if epoch % SAVE_EVERY == 0:
       torch.save(model.state_dict(),'model_epoch_%d.model' % epoch)
 
-def eval(ds, model):
+def eval_(ds, model):
     sampler = torch.utils.data.sampler.SequentialSampler(ds)
     testloader = torch.utils.data.DataLoader(ds, batch_size=BATCH_SIZE,
                                                 sampler = sampler,
@@ -105,14 +105,12 @@ def eval(ds, model):
 
 def main():
     ftrain = 'train_data.json'
-    ftest = 'test_data.json'
-    if not if 'vocab'.is_file():
-        gen_vocab(ftrain)
+    feval = 'eval_data.json'
 
     if TRAIN:
         ds  = MLPLDataset(ftrain)
     else:
-        ds  = MLPLDataset(ftest)
+        ds  = MLPLDataset(feval)
     print ('[MLPLDataset:] finish init')
 
     model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
@@ -123,7 +121,7 @@ def main():
     if TRAIN:
         train(ds,model)
     else:
-        eval(ds, model)
+        eval_(ds, model)
 
 
 if __name__=='__main__':
