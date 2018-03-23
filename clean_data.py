@@ -30,10 +30,10 @@ def clean_data(path_r, path_w, count_f):
     # return clean_data, [c_inp, c_out]
 
 
-train_in = 'jsnice/mljs/jsnice_data/training_processed.txt'
+train_in = 'mljs/jsnice_data/training_processed.txt'
 train_out = 'train_data_{}'.format(MAX_CONTEXT)
 train_freq = 'train_freq_{}'.format(MAX_CONTEXT)
-eval_in = 'jsnice/mljs/jsnice_data/eval_processsed.txt'
+eval_in = 'mljs/jsnice_data/eval_processsed.txt'
 eval_out = 'eval_data_{}'.format(MAX_CONTEXT)
 
 clean_data(train_in, train_out, train_freq)
