@@ -5,7 +5,7 @@ def flatten(l):
     return list(itertools.chain.from_iterable(l))
 
 MAX_CONTEXT = 100
-# for path_r, path_w in zip(f_in, f_out):
+
 def clean_data(path_r, path_w):
     with open(path_r) as js_file:
         data = js_file.readlines()
@@ -41,7 +41,6 @@ def main():
     out_train =  'train_data_{}.json'.format(MAX_CONTEXT)
     tdata = clean_data(in_train, out_train)
     vocab = gen_vocab(*zip(*tdata))
-    import ipdb; ipdb.set_trace()
 
     in_eval =  'mljs/jsnice_data/eval_processsed.txt'
     out_eval =  'eval_data_{}.json'.format(MAX_CONTEXT)
