@@ -25,15 +25,16 @@ def clean_data(path_r, path_w, count_f):
 
     with open(path_w, 'w') as outfile:
         json.dump(clean_data, outfile)
+    if count_f:
         with open(count_f, 'w') as outfile:
             json.dump([c_inp, c_out], outfile)
     # return clean_data, [c_inp, c_out]
 
 
-train_in = 'mljs/jsnice_data/training_processed.txt'
+train_in = 'train_100.txt'
 train_out = 'train_data_{}'.format(MAX_CONTEXT)
 train_freq = 'train_freq_{}'.format(MAX_CONTEXT)
-eval_in = 'mljs/jsnice_data/eval_processsed.txt'
+eval_in = 'eval_10.txt'
 eval_out = 'eval_data_{}'.format(MAX_CONTEXT)
 
 clean_data(train_in, train_out, train_freq)

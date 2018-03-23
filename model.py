@@ -58,7 +58,7 @@ class MLPLEncoder(nn.Module):
       embedded = self.input_dropout(embedded)
       embedded = nn.utils.rnn.pack_padded_sequence(embedded, compact_seq_lengths, batch_first=True)
       output, hidden = self.rnn(embedded)
-      hidden = hidden.squeeze()
+      hidden = hidden.squeeze(0)
       if 0 in seq_lengths:
         padded_hidden = torch.cat([hidden,Variable(self.settings.zeros(inp.size(0)-max_non_zero,hidden.size(1)))])
       else:

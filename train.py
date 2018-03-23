@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch.utils.data
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tensorboard_logger import configure, log_value
-
+from collections import Counter
 import ipdb
 from model import *
 from dataset import *
@@ -15,19 +15,22 @@ from settings import *
 from MLPLVocab import *
 
 INIT_LR = 0.01
-BATCH_SIZE = 128
+BATCH_SIZE = 2
 
-TRAIN = True
+TRAIN = False
 
 NUM_EPOCHS = 400
-PRINT_LOSS_EVERY = 2
+PRINT_LOSS_EVERY = 10
 PRINT_ACC_EVERY = 2
 LOG_EVERY = 10
 SAVE_EVERY = 5
 
+max_size = 500
+min_freq = 1
+
 criterion = nn.CrossEntropyLoss()
 
-settings = MLPLSettings({'cuda': False, 'base_model': ''})
+settings = MLPLSettings({'cuda': False, 'base_model': 'model_epoch_10.model'})
 
 def train(ds, model, optimizer=None, iters=None, ds_validate=None, do_log=True):
   print('Start training')
@@ -106,8 +109,8 @@ def eval_(ds, model):
 
 
 def main():
-    with open(f_freq) as freq_file:
-        freqs = json.load(freq_file)
+    with open('train_freq.json') as freq_file:
+        freqs = [Counter(x) for x in json.load(freq_file)]
 
     v_in = MLPLVocab(freqs[0], max_size=max_size, min_freq=min_freq, specials=['<pad>', '<unk>'])
     v_out = MLPLVocab(freqs[1], max_size=max_size, min_freq=min_freq)
