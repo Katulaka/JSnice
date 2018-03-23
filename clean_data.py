@@ -33,6 +33,7 @@ def main():
     in_train = 'mljs/jsnice_data/training_processed.txt'
     out_train =  'train_data_{}.json'.format(MAX_CONTEXT)
     tdata = clean_data(in_train, out_train)
+    import ipdb; ipdb.set_trace()
     gen_vocab(zip(*tdata))
 
     in_eval =  'mljs/jsnice_data/eval_processsed.txt'
