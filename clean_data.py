@@ -45,7 +45,7 @@ def main():
 
     in_eval =  'mljs/jsnice_data/eval_processsed.txt'
     out_eval =  'eval_data_{}.json'.format(MAX_CONTEXT)
-    _ = clean_data(f_eval, out_eval)
+    _ = clean_data(in_eval, out_eval)
 
 if __name__=='__main__':
     main()
