@@ -25,9 +25,12 @@ class MLPLDataset(Dataset):
             inp, out = zip(*data)
             print('[MLPLDataset.init] split data to input/output')
 
+
+        new_inp, new_out = zip(*[(x,y) for x,y in zip(inp,out) if self.out_vocab.vtoi(y)])
+
         self.input_data =  [[[self.inp_vocab.vtoi(tok) for tok in seq]
-                                for seq in x] for x in inp]
-        self.output_data = [self.out_vocab.vtoi(tok) for tok in out]
+                                for seq in x] for x in new_inp]
+        self.output_data = [self.out_vocab.vtoi(tok) for tok in new_out]
 
     def __len__(self):
         return len(self.output_data)

@@ -15,7 +15,7 @@ from settings import *
 from MLPLVocab import *
 
 INIT_LR = 0.01
-BATCH_SIZE = 2
+BATCH_SIZE = 16
 
 TRAIN = False
 
@@ -92,13 +92,19 @@ def eval_(ds, model):
     get_step = lambda x,y: x*len(testloader)+y
     current_time = time.time()
     accuracy = 0.
+    total_correct = 0.
     for i, (seq, seq_len, labels) in enumerate(testloader):
         seq = Variable(seq)
         labels = Variable(labels)
         if settings['cuda']:
             seq, seq_len, labels = seq.cuda(), seq_len.cuda(), labels.cuda()
         outputs = model(seq,seq_len)
-        ipdb.set_trace()
+        preds = outputs.max(1)[1]
+        correct = preds == labels
+        total_correct += int(torch.sum(correct).data.numpy())
+    # ipdb.set_trace()
+    print('Accuracy is {}'.format(total_correct/len(ds)))
+
         # running_accuracy +=
         # if i % PRINT_ACC_EVERY == PRINT_ACC_EVERY-1:
         #     new_time = time.time()
@@ -109,6 +115,7 @@ def eval_(ds, model):
 
 
 def main():
+    ds = None
     with open('train_freq.json') as freq_file:
         freqs = [Counter(x) for x in json.load(freq_file)]
 
@@ -118,16 +125,19 @@ def main():
     ftrain = 'train_data.json'
     feval = 'eval_data.json'
 
+
+
+
+
+    model = MLPLEncoder(len(v_in), len(v_out), 32)
     if TRAIN:
         ds  = MLPLDataset(ftrain, v_in, v_out)
-        model = MLPLEncoder(len(ds.inp_vocab), len(ds.out_vocab), 32)
     else:
         ds  = MLPLDataset(feval, v_in, v_out)
         model.load_state_dict(torch.load('{}'.format(settings['base_model'])))
 
     if settings['cuda']:
         model = model.cuda()
-
     if TRAIN:
         train(ds,model)
     else:
