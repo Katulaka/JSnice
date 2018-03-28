@@ -6,7 +6,7 @@ from MLPLVocab import *
 def flatten(l):
     return list(itertools.chain.from_iterable(l))
 
-MAX_CONTEXT = 100
+MAX_CONTEXT = 10
 
 def clean_data(path_r, path_w, count_f):
     c_inp = Counter()

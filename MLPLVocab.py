@@ -4,7 +4,7 @@ class MLPLVocab(vocab.Vocab):
     def __init__(self, counter, max_size=None, min_freq=1, specials=['<pad>'],
                  vectors=None, unk_init=None, vectors_cache=None):
       super(MLPLVocab, self).__init__(counter, max_size=max_size, min_freq=min_freq,
-                                        specials=specials)
+                                        specials=['<pad>', '<unk>'])
 
     def vtoi(self, val):
         id = self.stoi.get(val)
@@ -16,5 +16,5 @@ class MLPLVocab(vocab.Vocab):
         try:
             return self.itos[id]
         except:
-            e.args += ('number is not defined')
+            print('number is not defined')
             raise

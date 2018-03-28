@@ -22,15 +22,19 @@ class MLPLDataset(Dataset):
 
             data = json.load(json_file)
             print('[MLPLDataset.init] End data load')
-            inp, out = zip(*data)
-            print('[MLPLDataset.init] split data to input/output')
+        inp, out = zip(*data)
+        print('[MLPLDataset.init] split data to input/output')
 
 
         new_inp, new_out = zip(*[(x,y) for x,y in zip(inp,out) if self.out_vocab.vtoi(y)])
+        print('[MLPLDataset.init] removed unk labels')
 
         self.input_data =  [[[self.inp_vocab.vtoi(tok) for tok in seq]
                                 for seq in x] for x in new_inp]
+        print('[MLPLDataset.init] finished input_data')
+
         self.output_data = [self.out_vocab.vtoi(tok) for tok in new_out]
+        print('[MLPLDataset.init] finished output_data')
 
     def __len__(self):
         return len(self.output_data)

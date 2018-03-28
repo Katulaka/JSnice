@@ -105,14 +105,6 @@ def eval_(ds, model):
     # ipdb.set_trace()
     print('Accuracy is {}'.format(total_correct/len(ds)))
 
-        # running_accuracy +=
-        # if i % PRINT_ACC_EVERY == PRINT_ACC_EVERY-1:
-        #     new_time = time.time()
-        #     print('Average time per mini-batch, %f' % ((new_time-current_time) / PRINT_LOSS_EVERY))
-        #     current_time = new_time
-        #     print('[%d, %5d] accuracy: %.3f' %
-        #         (epoch + 1, i + 1, running_accuracy / PRINT_LOSS_EVERY))
-
 
 def main():
     ds = None
@@ -124,10 +116,6 @@ def main():
 
     ftrain = 'train_data.json'
     feval = 'eval_data.json'
-
-
-
-
 
     model = MLPLEncoder(len(v_in), len(v_out), 32)
     if TRAIN:
