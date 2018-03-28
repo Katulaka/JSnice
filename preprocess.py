@@ -111,7 +111,7 @@ def serialize(json_ast, arr, this_var, is_pre):
                 node_label += "@"
             if e == this_var:
                 node_label += MY_VAR
-            elif e.startswith(VAR_PREFIX):
+            elif False and e.startswith(VAR_PREFIX):
                 node_label += OTHER_VAR
             else:
                 node_label += e
