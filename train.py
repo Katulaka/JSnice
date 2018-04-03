@@ -17,7 +17,7 @@ from MLPLVocab import *
 INIT_LR = 0.01
 BATCH_SIZE = 16
 
-TRAIN = False
+TRAIN = True
 
 NUM_EPOCHS = 400
 PRINT_LOSS_EVERY = 10
@@ -105,17 +105,29 @@ def eval_(ds, model):
     # ipdb.set_trace()
     print('Accuracy is {}'.format(total_correct/len(ds)))
 
+        # running_accuracy +=
+        # if i % PRINT_ACC_EVERY == PRINT_ACC_EVERY-1:
+        #     new_time = time.time()
+        #     print('Average time per mini-batch, %f' % ((new_time-current_time) / PRINT_LOSS_EVERY))
+        #     current_time = new_time
+        #     print('[%d, %5d] accuracy: %.3f' %
+        #         (epoch + 1, i + 1, running_accuracy / PRINT_LOSS_EVERY))
+
 
 def main():
     ds = None
-    with open('train_freq.json') as freq_file:
+    with open('train_freq_10.json') as freq_file:
         freqs = [Counter(x) for x in json.load(freq_file)]
 
     v_in = MLPLVocab(freqs[0], max_size=max_size, min_freq=min_freq, specials=['<pad>', '<unk>'])
     v_out = MLPLVocab(freqs[1], max_size=max_size, min_freq=min_freq)
 
-    ftrain = 'train_data.json'
-    feval = 'eval_data.json'
+    ftrain = 'train_data_10.json'
+    feval = 'eval_data_10.json'
+
+
+
+
 
     model = MLPLEncoder(len(v_in), len(v_out), 32)
     if TRAIN:

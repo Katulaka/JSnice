@@ -31,7 +31,7 @@ def clean_data(path_r, path_w, count_f):
     # return clean_data, [c_inp, c_out]
 
 
-train_in = 'train_100.txt'
+train_in = 'train_mlpl_100.txt'
 train_out = 'train_data_{}'.format(MAX_CONTEXT)
 train_freq = 'train_freq_{}'.format(MAX_CONTEXT)
 eval_in = 'eval_10.txt'

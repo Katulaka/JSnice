@@ -42,6 +42,7 @@ class MLPLEncoder(nn.Module):
           - **output** (batch, seq_len, hidden_size): variable containing the encoded features of the input sequence
           - **hidden** (num_layers * num_directions, batch, hidden_size): variable containing the features in the hidden state h
       """
+      ipdb.set_trace()
       inp = input_var.view(-1,input_var.size(2))
       seq_lengths, perm_idx = input_lengths.view(-1).sort(0, descending=True)
       seq_tensor = inp[perm_idx]
