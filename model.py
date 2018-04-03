@@ -13,8 +13,8 @@ class MLPLEncoder(nn.Module):
         n_layers=1, bidirectional=False, rnn_cell='gru'):
       super(MLPLEncoder, self).__init__()
 
-
       self.settings = MLPLSettings()
+      self.hidden_size = hidden_size
       if rnn_cell.lower() == 'lstm':
         self.rnn_cell = nn.LSTM
       elif rnn_cell.lower() == 'gru':
@@ -42,20 +42,32 @@ class MLPLEncoder(nn.Module):
           - **output** (batch, seq_len, hidden_size): variable containing the encoded features of the input sequence
           - **hidden** (num_layers * num_directions, batch, hidden_size): variable containing the features in the hidden state h
       """
-      ipdb.set_trace()
-      inp = input_var.view(-1,input_var.size(2))
+      inp_size = input_var.size()
+      inp = input_var.view(-1,input_var.size(2),2)
+      inp_det = input_var[:,:,:,0].contiguous()
+      inp_rnd = input_var[:,:,:,1].contiguous()
+      embedding_det = self.embedding(inp_det.view(-1,input_var.size(2))).view(inp_size[0],inp_size[1],inp_size[2],self.hidden_size)
+      random_matrix = torch.rand(inp_size[0],inp_rnd.max().data[0]+1,self.hidden_size)
+      random_matrix[:,0]=0.
+      reshaped_matrix = Variable(random_matrix.unsqueeze(1).expand(inp_size[0],inp_size[1],random_matrix.size(1),self.hidden_size))
+      inp_rnd=inp_rnd.unsqueeze(3).repeat(1,1,1,self.hidden_size)
+      embedding_rnd = torch.gather(reshaped_matrix,2,inp_rnd)      
+      total_embedding = (embedding_det + embedding_rnd).view(-1,inp_size[2],self.hidden_size)
       seq_lengths, perm_idx = input_lengths.view(-1).sort(0, descending=True)
       seq_tensor = inp[perm_idx]
+      permuted_embeddings = total_embedding[perm_idx]
       np_lengths = seq_lengths.cpu().numpy()
       if 0 in seq_lengths:
         max_non_zero = seq_lengths[seq_lengths>0].size(0)
         compact_seq_tensor = seq_tensor[:max_non_zero]
+        compact_embedding = permuted_embeddings[:max_non_zero]
         compact_seq_lengths = np_lengths[:max_non_zero]
       else:
         compact_seq_tensor = seq_tensor
+        compact_embedding = permuted_embeddings
         compact_seq_lengths = np_lengths
-
-      embedded = self.embedding(compact_seq_tensor)
+      
+      embedded = compact_embedding
       embedded = self.input_dropout(embedded)
       embedded = nn.utils.rnn.pack_padded_sequence(embedded, compact_seq_lengths, batch_first=True)
       output, hidden = self.rnn(embedded)
