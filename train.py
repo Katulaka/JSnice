@@ -125,10 +125,6 @@ def main():
     ftrain = 'train_data_10.json'
     feval = 'eval_data_10.json'
 
-
-
-
-
     model = MLPLEncoder(len(v_in), len(v_out), 32)
     if TRAIN:
         ds  = MLPLDataset(ftrain, v_in, v_out)

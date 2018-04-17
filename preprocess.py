@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from tqdm import tqdm
 
 import json
 import sys
@@ -19,10 +20,10 @@ def process_file(in_file, out_file):
     global success
     with open(out_file, "w") as fout:
         with open(in_file, "r") as fin:
-            for line in fin:
+            for line in tqdm(fin):
                 idx = line.find(" ")
                 script = line[:idx]
-                print("Processing "+script+ " ("+ str(success) + ", " + str(total-success) + ")")
+                # print("Processing "+script+ " ("+ str(success) + ", " + str(total-success) + ")")
                 total += 1
                 json_ast_str = line[idx+1:]
                 try:
