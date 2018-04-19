@@ -30,11 +30,15 @@ def clean_data(path_r, path_w, count_f):
             json.dump([c_inp, c_out], outfile)
     # return clean_data, [c_inp, c_out]
 
-
-train_in = 'training_proc_full.txt'
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--train_file', type=str, default='mljs/jsnice_data/training_processed.txt')
+parser.add_argument('--eval_file', type=str, default='mljs/jsnice_data/eval_processsed.txt')
+args = parser.parse_args()
+train_in = args.train_file
+eval_in = args.eval_file
 train_out = 'train_data_{}'.format(MAX_CONTEXT)
 train_freq = 'train_freq_{}'.format(MAX_CONTEXT)
-eval_in = 'eval_10.txt'
 eval_out = 'eval_data_{}'.format(MAX_CONTEXT)
 
 clean_data(train_in, train_out, train_freq)
