@@ -7,7 +7,7 @@ import ipdb
 
 from settings import *
 
-USE_RND = False
+USE_RND = True 
 
 class MLPLEncoder(nn.Module):
     def __init__(self, inp_vocab_size, out_vocab_size, hidden_size,
@@ -54,7 +54,7 @@ class MLPLEncoder(nn.Module):
           random_matrix[:,0]=0.
           reshaped_matrix = Variable(random_matrix.unsqueeze(1).expand(inp_size[0],inp_size[1],random_matrix.size(1),self.hidden_size))
           inp_rnd=inp_rnd.unsqueeze(3).repeat(1,1,1,self.hidden_size)
-          embedding_rnd = torch.gather(reshaped_matrix,2,inp_rnd.cpu()).cuda()
+          embedding_rnd = torch.gather(reshaped_matrix,2,inp_rnd.cpu())
           total_embedding = (embedding_det + embedding_rnd).view(-1,inp_size[2],self.hidden_size)
       else:
           total_embedding = (embedding_det).view(-1,inp_size[2],self.hidden_size)
