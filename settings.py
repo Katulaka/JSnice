@@ -21,3 +21,7 @@ class MLPLSettings(metaclass=Singleton):
 	def zeros(self,*size):
 		rc = torch.zeros(*size)
 		return rc.cuda() if self.hyperparameters['cuda'] else rc
+		
+	def ones(self,*size):
+		rc = torch.ones(*size)
+		return rc.cuda() if self.hyperparameters['cuda'] else rc

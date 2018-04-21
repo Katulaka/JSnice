@@ -39,7 +39,7 @@ class MLPLDataset(Dataset):
             if self.out_vocab.vtoi(y)[0]==self.out_vocab.vtoi('<unk>')[0]:
                 continue
 
-            d = {}            
+            d = {}
             self.output_data.append(self.out_vocab.vtoi(y)[0])
             self.input_data.append([[serialize_number(d,self.inp_vocab.vtoi(tok)) for tok in ctx] for ctx in rec])
 

@@ -30,6 +30,8 @@ class MLPLEncoder(nn.Module):
       self.output_layer = nn.Linear(hidden_size,out_vocab_size)
       self.input_dropout_p = input_dropout_p
       self.input_dropout = nn.Dropout(p=input_dropout_p)
+      self.normal_std = self.settings.ones(self.hidden_size)
+      self.variances = nn.Parameter(torch.Tensor(self.hidden_size))
 
     def forward(self, input_var, input_lengths):
       """
@@ -50,9 +52,12 @@ class MLPLEncoder(nn.Module):
       embedding_det = self.embedding(inp_det.view(-1,input_var.size(2))).view(inp_size[0],inp_size[1],inp_size[2],self.hidden_size)
       if USE_RND:
           inp_rnd = input_var[:,:,:,1].contiguous()
-          random_matrix = torch.rand(inp_size[0],inp_rnd.max().data[0]+1,self.hidden_size)
+          stds = self.normal_std.expand(inp_size[0],inp_rnd.max().data[0]+1,self.hidden_size)
+          random_matrix = torch.normal(0.,stds)
           random_matrix[:,0]=0.
-          reshaped_matrix = Variable(random_matrix.unsqueeze(1).expand(inp_size[0],inp_size[1],random_matrix.size(1),self.hidden_size))
+          exp_vars = self.variances.expand_as(random_matrix)
+          random_matrix = Variable(random_matrix) * exp_vars
+          reshaped_matrix = random_matrix.unsqueeze(1).expand(inp_size[0],inp_size[1],random_matrix.size(1),self.hidden_size)
           inp_rnd=inp_rnd.unsqueeze(3).repeat(1,1,1,self.hidden_size)
           embedding_rnd = torch.gather(reshaped_matrix,2,inp_rnd.cpu())
           total_embedding = (embedding_det + embedding_rnd).view(-1,inp_size[2],self.hidden_size)
