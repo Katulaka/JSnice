@@ -2,3 +2,4 @@ mljs*
 *.json
 pytorch-seq2seq
 __pycache__
+proc_data
